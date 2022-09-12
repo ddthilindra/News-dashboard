@@ -1,0 +1,22 @@
+{
+    "news":[
+        {
+            "title":"XXXXXXXXXXXXXXXXXXX",
+            "description":"XXXXXXXXXXXXXXXXXXX",
+            "category":"XXX",
+            "id":1
+        },
+        {
+            "title":"ZZZZZZZZZZZZZZZZZZZZZ",
+            "description":"ZZZZZZZZZZZZZZZZZZZZZZZZZZ",
+            "category":"ZZZ",
+            "id":2
+        },
+        {
+            "title":"WWWWWWWWWWWWWWWWWWWWWW",
+            "description":"WWWWWWWWWWWWWWWWWWWWWWWWW",
+            "category":"WWW",
+            "id":3
+        }
+    ]
+}
