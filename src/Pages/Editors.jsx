@@ -1,5 +1,8 @@
 import { Box, Button, Container, makeStyles } from "@material-ui/core";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import Layout from "../Components/Layout";
 import EditorPopup from "../Components/Popups/EditorPopup";
 import EditorTbl from "../Components/Table/EditorTbl";
 
@@ -15,6 +18,7 @@ const useStyles = makeStyles({
 export default function Editors() {
   const classes = useStyles();
   const [openPopup, setOpenPopup] = useState(false);
+  const token = localStorage.getItem("token")
 
   const openInPopup = async (id, update) => {
     if (update) {
@@ -23,8 +27,33 @@ export default function Editors() {
     }
     setOpenPopup(true);
   };
+const [editors, seteditors] = useState([]);
+
+const history = useHistory();
+  useEffect(() => {
+    if (!localStorage.getItem("isLoggedIn")) {
+      history.push('/')
+    }
+    const config = {
+      headers: { Authorization: token },
+    };
+    
+    axios
+      .get("http://localhost:8000/editor/getAllEditors", config)
+      .then((res) => {
+        if (res.data.code == 200 && res.data.success == true) {
+          seteditors(res.data.data);
+        } else {
+          window.alert(res.data.message);
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
   return (
-    <div>
+    <>
+      <Layout />
+    
+    <div style={{"margin-left": "18vw","margin-right": "2vw"}}>
       <Container>
         <Box className={classes.add}>
           <Button color="primary" variant="contained" onClick={openInPopup}>
@@ -42,10 +71,11 @@ export default function Editors() {
 
       <div className="grid">
         <div className="listContainer">
-          <EditorTbl data={editorData}/>
+          <EditorTbl data={editors}/>
         </div>
       </div>
     </div>
+    </>
   );
 }
 

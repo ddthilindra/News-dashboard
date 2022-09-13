@@ -9,29 +9,29 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-export default function DeleteNewsPopup(props) {
-  const { openDeletePopup, setOpenDeletePopup, newsRecordForDelete } = props;
+export default function DeleteCategory(props) {
+  const { openDeletePopup, setOpenDeletePopup, categoryRecordForDelete } = props;
   const [values, setValues] = useState("");
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const config = {
     headers: { Authorization: token },
   };
   useEffect(() => {
-    if (newsRecordForDelete != null) {
+    if (categoryRecordForDelete != null) {
       setValues({
-        ...newsRecordForDelete,
+        ...categoryRecordForDelete,
       });
     }
-  }, [newsRecordForDelete]);
+  }, [categoryRecordForDelete]);
   const handleClose = () => {
     setOpenDeletePopup(false);
   };
 
-  function deleteAdmin(e) {
+  function deleteCategory(e) {
     e.preventDefault();
 
     axios
-      .delete(`http://localhost:8000/news/deleteNewsById/${values._id}`, config)
+      .delete(`http://localhost:8000/category/DeleteCategoryById/${values._id}`, config)
       .then((response) => {
         if (response.status == 200) {
           window.alert(`${response.data.message}`);
@@ -57,7 +57,7 @@ export default function DeleteNewsPopup(props) {
         </DialogTitle>
         <DialogContent dividers>
           <DialogContentText>
-            Are you sure you want to delete <b>{values.title}</b> ?
+            Are you sure you want to delete <b>{values.category} category</b> ?
             <br />
             This action cannot be undone!
           </DialogContentText>
@@ -66,7 +66,7 @@ export default function DeleteNewsPopup(props) {
           <Button onClick={handleClose} variant="outlined">
             cancel
           </Button>
-          <Button onClick={deleteAdmin} color="error" variant="contained">
+          <Button onClick={deleteCategory} color="error" variant="contained">
             Delete
           </Button>
         </DialogActions>

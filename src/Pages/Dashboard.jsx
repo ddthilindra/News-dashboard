@@ -12,6 +12,8 @@ import {
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import SendIcon from "@mui/icons-material/Send";
+import { useHistory } from "react-router-dom";
+import Layout from "../Components/Layout";
 
 const useStyles = makeStyles({
   btn: {
@@ -33,6 +35,7 @@ const useStyles = makeStyles({
 });
 export default function Dashboard() {
   const classes = useStyles();
+  const history = useHistory();
   const [title, settitle] = useState("");
   const [description, setdescription] = useState("");
   const [titleError, settitleError] = useState(false);
@@ -40,6 +43,9 @@ export default function Dashboard() {
   const [category, setcategory] = useState("todos");
 
   useEffect(() => {
+    if (!localStorage.getItem("isLoggedIn")) {
+      history.push('/')
+    }
     settitleError(false);
     setdescriptionError(false);
     
@@ -61,7 +67,10 @@ export default function Dashboard() {
     }
   };
   return (
-    <Container>
+    <>
+      <Layout />
+    
+    <Container style={{"margin-left": "16vw"}}>
       <Typography
         className={classes.title}
         variant="h6"
@@ -111,5 +120,7 @@ export default function Dashboard() {
         </Button>
       </form>
     </Container>
+    </>
   );
 }
+

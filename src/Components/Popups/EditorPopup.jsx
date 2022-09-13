@@ -24,23 +24,14 @@ export default function EditorPopup(props) {
   const [mobile_number, setmobile_number] = useState(Number);
   const [password, setpassword] = useState("");
   const [cpassword, setcpassword] = useState("");
-  const [city, setcity] = useState("");
-  const [role, setrole] = useState("");
   const [lname, setlname] = useState("");
-
+  const token = localStorage.getItem("token")
   useEffect(() => {
     setErrorFname(false);
     setErrorEmail(false);
     setErrorPhone(false);
     setErrorPass(false);
     setErrorCPass(false);
-    // setfname(values.admin_name);
-    // if (adminrecordForEdit != null) {
-    //   setValues({
-    //     ...adminrecordForEdit,
-    //   });
-    //   setfname(values.admin_name);
-    // }
   }, []);
   const handleClose = () => {
     setEditorOpenPopup(false);
@@ -49,8 +40,6 @@ export default function EditorPopup(props) {
     setmobile_number("");
     setpassword("");
     setcpassword("");
-    setrole("");
-    setcity("");
     setlname("");
 
     setErrorFname(false);
@@ -58,8 +47,6 @@ export default function EditorPopup(props) {
     setErrorPhone(false);
     setErrorPass(false);
     setErrorCPass(false);
-    setErrorRole(false);
-    setErrorCity(false);
     seterrorLname(false);
 
     setfNameError("");
@@ -67,8 +54,6 @@ export default function EditorPopup(props) {
     setPhoneError("");
     setPassError("");
     setCPassError("");
-    setcityError("");
-    setroleError("");
     setlnameError("");
   };
 
@@ -78,12 +63,8 @@ export default function EditorPopup(props) {
   const [errorPass, setErrorPass] = useState(false);
   const [errorCPass, setErrorCPass] = useState(false);
 
-  const [errorRole, setErrorRole] = useState(false);
-  const [errorCity, setErrorCity] = useState(false);
   const [errorLname, seterrorLname] = useState(false);
 
-  const [roleError, setroleError] = useState(false);
-  const [cityError, setcityError] = useState(false);
   const [lnameError, setlnameError] = useState(false);
 
   const [fNameError, setfNameError] = useState("");
@@ -98,8 +79,6 @@ export default function EditorPopup(props) {
     setErrorPhone(false);
     setErrorPass(false);
     setErrorCPass(false);
-    setErrorRole(false);
-    setErrorCity(false);
     seterrorLname(false);
 
     setfNameError("");
@@ -107,8 +86,6 @@ export default function EditorPopup(props) {
     setPhoneError("");
     setPassError("");
     setCPassError("");
-    setcityError("");
-    setroleError("");
     setlnameError("");
 
     if (fname == "") {
@@ -121,21 +98,13 @@ export default function EditorPopup(props) {
       seterrorLname(true);
       setlnameError("This field is required");
     }
-    if (!city.trim()) {
-      console.log("empty email_address");
-      setErrorCity(true);
-      setcityError("This field is required");
-    }
+
     if (!email_address.trim()) {
       console.log("empty email_address");
       setErrorEmail(true);
       setemailAddressError("This field is required");
     }
-    if (!role.trim()) {
-      console.log("empty email_address");
-      setErrorRole(true);
-      setroleError("This field is required");
-    }
+
     if (mobile_number < 10) {
       console.log("empty mobile_number");
       setErrorPhone(true);
@@ -172,21 +141,19 @@ export default function EditorPopup(props) {
     e.preventDefault();
     const validation = await validate();
     if (fname && email_address && mobile_number && password && cpassword) {
-    //   const config = {
-    //     headers: { Authorization: Admintoken },
-    //   };
-      const empData = {
-        firstName:fname,
-        lastName:lname,
-        email:email_address,
-        contactNo:mobile_number,
+      const editorData = {
+        firstName: fname,
+        lastName: lname,
+        email: email_address,
+        mobile: mobile_number,
         password,
-        city,
-        user_type:role,
       };
-console.log(empData)
+      console.log(editorData)
+      const config = {
+        headers: { Authorization: token },
+      };
       axios
-        .post(`http://localhost:8000/user/register`, empData)
+        .post(`http://localhost:8000/editor/addEditor`, editorData,config)
         .then((response) => {
           console.log(response.data);
 
@@ -229,124 +196,94 @@ console.log(empData)
           className="dlgcontainer"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
-          
-       
-        <DialogContent dividers>
-          <TextField
-            error={errorFname}
-            helperText={fNameError}
-            value={fname}
-            required
-            autoFocus
-            margin="dense"
-            id="name"
-            label="First Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setfname(e.target.value)}
-          />
+          <DialogContent dividers>
+            <TextField
+              error={errorFname}
+              helperText={fNameError}
+              value={fname}
+              required
+              autoFocus
+              margin="dense"
+              id="name"
+              label="First Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setfname(e.target.value)}
+            />
 
-          <TextField
-            error={errorRole}
-            helperText={roleError}
-            value={role}
-            required
-            margin="dense"
-            id="name"
-            label="Role"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setrole(e.target.value)}
-          />
+            <TextField
+              // defaultValue={values.id}
+              error={errorPhone}
+              helperText={PhoneError}
+              value={mobile_number}
+              required
+              margin="dense"
+              id="name"
+              label="Phone Number"
+              type="number"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setmobile_number(e.target.value)}
+            />
 
-          <TextField
-            // defaultValue={values.id}
-            error={errorPhone}
-            helperText={PhoneError}
-            value={mobile_number}
-            required
-            margin="dense"
-            id="name"
-            label="Phone Number"
-            type="number"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setmobile_number(e.target.value)}
-          />
+            <TextField
+              error={errorPass}
+              helperText={PassError}
+              value={password}
+              required
+              margin="dense"
+              id="name"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setpassword(e.target.value)}
+            />
+          </DialogContent>
+          <DialogContent dividers>
+            <TextField
+              error={errorLname}
+              helperText={lnameError}
+              value={lname}
+              required
+              margin="dense"
+              id="name"
+              label="Last Name"
+              type="text"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setlname(e.target.value)}
+            />
 
-          <TextField
-            error={errorPass}
-            helperText={PassError}
-            value={password}
-            required
-            margin="dense"
-            id="name"
-            label="Password"
-            type="password"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setpassword(e.target.value)}
-          />
-        </DialogContent>
-        <DialogContent dividers>
-          <TextField
-            error={errorLname}
-            helperText={lnameError}
-            value={lname}
-            required
-            margin="dense"
-            id="name"
-            label="Last Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setlname(e.target.value)}
-          />
+            <TextField
+              error={errorEmail}
+              helperText={emailAddressError}
+              value={email_address}
+              required
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setemail_address(e.target.value)}
+            />
 
-          <TextField
-            error={errorEmail}
-            helperText={emailAddressError}
-            value={email_address}
-            required
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setemail_address(e.target.value)}
-          />
-
-          <TextField
-            error={errorCity}
-            helperText={cityError}
-            value={city}
-            required
-            margin="dense"
-            id="name"
-            label="City"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setcity(e.target.value)}
-          />
-
-          <TextField
-            error={errorCPass}
-            helperText={CPassError}
-            value={cpassword}
-            required
-            margin="dense"
-            id="name"
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            variant="standard"
-            onChange={(e) => setcpassword(e.target.value)}
-          />
-        </DialogContent>
+            <TextField
+              error={errorCPass}
+              helperText={CPassError}
+              value={cpassword}
+              required
+              margin="dense"
+              id="name"
+              label="Confirm Password"
+              type="password"
+              fullWidth
+              variant="standard"
+              onChange={(e) => setcpassword(e.target.value)}
+            />
+          </DialogContent>
         </div>
         <DialogActions>
           <Button onClick={handleClose} variant="outlined">

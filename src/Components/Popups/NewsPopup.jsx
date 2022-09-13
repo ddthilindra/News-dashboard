@@ -25,7 +25,8 @@ export default function NewsPopup(props) {
   const classes = useStyles();
   const [categories, setcategories] = useState([]);
   const [btnText, setbtnText] = useState("Submit");
-  const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI2MzFmNWExZjBkZjhjMTFmMTA3ZmEzZTgiLCJ1c2VyTmFtZSI6ImRlc2hpdGhhIiwiZW1haWwiOiJkZHRoaWxpbmRyYUBtYWlsLmNvbSIsImltYWdlIjoiaHR0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vZGNrMTU2bGJ3L2ltYWdlL3VwbG9hZC92MTY2Mjk5OTA2OS9wcm9maWxlUGljdHVyZS93Y2lmZ25rZ2t3bXhzcndiZHRldS5wbmcifSwiaWF0IjoxNjYzMDA5MjgzMzkyLCJleHAiOjE2NjMwMTA0OTI5OTJ9.D9neE0xgBhKHz30ndQPjPemqLImb1_HQGC7kEE0hYv4`;
+  const token = localStorage.getItem("token")
+  
   const config = {
     headers: { Authorization: token },
   };
@@ -93,7 +94,7 @@ export default function NewsPopup(props) {
       };
       console.log(newsData);
       axios
-        .post(`http://localhost:8000/news/AddNews`, newsData,config)
+        .post(`http://localhost:8000/news/addNews`, newsData,config)
         .then((res) => {
           if (res.data.code == 200 && res.data.success == true) {
             window.alert(res.data.message);
@@ -131,7 +132,7 @@ export default function NewsPopup(props) {
       };
       console.log(newsData);
       axios
-        .put(`http://localhost:8000/news/UpdateNews/`+updateId, newsData,config)
+        .put(`http://localhost:8000/news/updateNews/`+updateId, newsData,config)
         .then((res) => {
           if (res.data.code == 200 && res.data.success == true) {
             window.alert(res.data.message);
@@ -155,7 +156,7 @@ export default function NewsPopup(props) {
       // console.log(id);
       if (id) {
         await axios
-          .get(`http://localhost:8000/news/GetNewsById/` + id, config)
+          .get(`http://localhost:8000/news/getNewsById/` + id, config)
           .then((res) => {
             if (res.data.code == 200 && res.data.success == true) {
               // setname(id);
@@ -183,7 +184,7 @@ export default function NewsPopup(props) {
     };
 
     axios
-      .get("http://localhost:8000/category/GetAllCategory", config)
+      .get("http://localhost:8000/category/getAllCategory", config)
       .then((res) => {
         if (res.data.code == 200 && res.data.success == true) {
           setcategories(res.data.data);

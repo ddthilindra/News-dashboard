@@ -12,6 +12,8 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import Layout from "../Components/Layout";
 import NewsCard from "../Components/NewsCard";
 import DeleteNewsPopup from "../Components/Popups/DeleteNewsPopup";
 import NewsPopup from "../Components/Popups/NewsPopup";
@@ -27,13 +29,18 @@ const useStyles = makeStyles({
 export default function News() {
   const [news, setnews] = useState([]);
   const [categories, setcategories] = useState([]);
-  const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI2MzFmNWExZjBkZjhjMTFmMTA3ZmEzZTgiLCJ1c2VyTmFtZSI6ImRlc2hpdGhhIiwiZW1haWwiOiJkZHRoaWxpbmRyYUBtYWlsLmNvbSIsImltYWdlIjoiaHR0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vZGNrMTU2bGJ3L2ltYWdlL3VwbG9hZC92MTY2Mjk5OTA2OS9wcm9maWxlUGljdHVyZS93Y2lmZ25rZ2t3bXhzcndiZHRldS5wbmcifSwiaWF0IjoxNjYzMDA5MjgzMzkyLCJleHAiOjE2NjMwMTA0OTI5OTJ9.D9neE0xgBhKHz30ndQPjPemqLImb1_HQGC7kEE0hYv4`;
+  const token = localStorage.getItem("token")
+  
+  const history = useHistory();
   useEffect(() => {
+    if (!localStorage.getItem("isLoggedIn")) {
+      history.push('/')
+    }
     const config = {
       headers: { Authorization: token },
     };
     axios
-      .get("http://localhost:8000/news/GetAllNews")
+      .get("http://localhost:8000/news/getAllNews")
       .then((res) => {
         if (res.data.code == 200 && res.data.success == true) {
           setnews(res.data.data);
@@ -43,7 +50,7 @@ export default function News() {
       })
       .catch((err) => console.log(err));
     axios
-      .get("http://localhost:8000/category/GetAllCategory", config)
+      .get("http://localhost:8000/category/getAllCategory", config)
       .then((res) => {
         if (res.data.code == 200 && res.data.success == true) {
           setcategories(res.data.data);
@@ -99,8 +106,10 @@ export default function News() {
       : news;
     setdataTable(_vals);
   }
-  return (
-    <Container>
+  return (<>
+    <Layout />
+  
+    <Container style={{"margin-left": "18vw","padding-right": "3vw"}}>
       <Box className={classes.add}>
         <FormControl style={{ minWidth: 120 }}>
           <InputLabel id="demo-simple-select-label">Category</InputLabel>
@@ -170,40 +179,7 @@ export default function News() {
           ))} */}
       </Grid>
     </Container>
+    </>
   );
 }
 
-const newsData = [
-  {
-    id: 1,
-    title: "News1",
-    desc: "asdasdasdas asdasdasd asdasd asd a sd as dasd    asd as d  asd as dasdasdasd  asdasdas",
-    category: "XXX",
-    imageUrl:
-      "https://www.borouge.com/MediaCentre/Images1/News-Website-banner-V1.JPG",
-  },
-  {
-    id: 2,
-    title: "News1",
-    category: "XXX",
-    desc: "asdasdasdas asdasdasd asdasd asd a sd as dasd    asd as d  asd as dasdasdasd  asdasdas",
-  },
-  {
-    id: 3,
-    title: "News1",
-    category: "XXX",
-    desc: "asdasdasdas asdasdasd asdasd asd a sd as dasd    asd as d  asd as dasdasdasd  asdasdas",
-  },
-  {
-    id: 4,
-    title: "News1",
-    category: "XXX",
-    desc: "asdasdasdas asdasdasd asdasd asd a sd as dasd    asd as d  asd as dasdasdasd  asdasdas",
-  },
-  {
-    id: 5,
-    title: "News1",
-    category: "XXX",
-    desc: "asdasdasdas asdasdasd asdasd asd a sd as dasd    asd as d  asd as dasdasdasd  asdasdas",
-  },
-];

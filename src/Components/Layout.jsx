@@ -14,9 +14,9 @@ import React from "react";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import { useHistory, useLocation } from "react-router-dom";
 import { PostAddSharp } from "@material-ui/icons";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 const drawerWidth = 240;
 const useStyle = makeStyles((theme) => {
@@ -59,18 +59,35 @@ export default function Layout({ children }) {
   const location = useLocation();
 
   const menuLinks = [
-    { name: "Dashbord", path: "/", icon: <DashboardIcon color="primary" /> },
+    
     { name: "News", path: "/news", icon: <NewspaperIcon color="primary" /> },
-    { name: "Editors", path: "/editors", icon: <AccountBoxIcon color="primary" />},
-    { name: "Logins", path: "/category", icon: <PostAddSharp color="primary" /> },
+    {
+      name: "Editors",
+      path: "/editors",
+      icon: <AccountBoxIcon color="primary" />,
+    },
+    {
+      name: "Category",
+      path: "/category",
+      icon: <PostAddSharp color="primary" />,
+    },
   ];
+
+  function handleLogout() {
+    console.log("first")
+    localStorage.removeItem("username");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    history.push("/");
+  }
 
   return (
     <div className={classes.root}>
       <AppBar color="" className={classes.appbar} elevation={0}>
         <Toolbar>
           <Typography className={classes.wlcm}>Welcome</Typography>
-          <Typography>User</Typography>
+          <Typography>{localStorage.getItem("username")}</Typography>
           <Avatar src="./assets/user.png" className={classes.avatar} />
         </Toolbar>
       </AppBar>
@@ -81,8 +98,8 @@ export default function Layout({ children }) {
         classes={{ paper: classes.drawerPaper }}
       >
         <div>
-          <Typography variant="h5" className={classes.title}>
-            News
+          <Typography variant="h6" className={classes.title}>
+            News Dashboard
           </Typography>
         </div>
         <List>
@@ -97,11 +114,17 @@ export default function Layout({ children }) {
               <ListItemText>{item.name}</ListItemText>
             </ListItem>
           ))}
+          <ListItem button onClick={handleLogout}>
+            <ListItemIcon >
+              <LogoutIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText>Logout</ListItemText>
+          </ListItem>
         </List>
       </Drawer>
       <div className={classes.page}>
         <div className={classes.toolbar}></div>
-        {children}
+        {/* {children} */}
       </div>
     </div>
   );

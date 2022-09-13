@@ -12,7 +12,8 @@ import React, { useState } from "react";
 export default function CategoryPopup(props) {
   const { openCategoryPopup, setCategoryOpenPopup, adminrecordForEdit } = props;
 
-  const token = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOiI2MzFmNWExZjBkZjhjMTFmMTA3ZmEzZTgiLCJ1c2VyTmFtZSI6ImRlc2hpdGhhIiwiZW1haWwiOiJkZHRoaWxpbmRyYUBtYWlsLmNvbSIsImltYWdlIjoiaHR0cHM6Ly9yZXMuY2xvdWRpbmFyeS5jb20vZGNrMTU2bGJ3L2ltYWdlL3VwbG9hZC92MTY2Mjk5OTA2OS9wcm9maWxlUGljdHVyZS93Y2lmZ25rZ2t3bXhzcndiZHRldS5wbmcifSwiaWF0IjoxNjYzMDA5MjgzMzkyLCJleHAiOjE2NjMwMTA0OTI5OTJ9.D9neE0xgBhKHz30ndQPjPemqLImb1_HQGC7kEE0hYv4`;
+  const token = localStorage.getItem("token")
+  
   const config = {
     headers: { Authorization: token },
   };
@@ -53,7 +54,7 @@ export default function CategoryPopup(props) {
         description
       };
       axios
-        .post(`http://localhost:8000/category/AddCategory`, categoryData, config)
+        .post(`http://localhost:8000/category/addCategory`, categoryData, config)
         .then((res) => {
           if (res.data.code == 200 && res.data.success == true) {
             window.alert(res.data.message);
