@@ -16,6 +16,7 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
 import { useHistory, useLocation } from "react-router-dom";
+import { PostAddSharp } from "@material-ui/icons";
 
 const drawerWidth = 240;
 const useStyle = makeStyles((theme) => {
@@ -61,7 +62,7 @@ export default function Layout({ children }) {
     { name: "Dashbord", path: "/", icon: <DashboardIcon color="primary" /> },
     { name: "News", path: "/news", icon: <NewspaperIcon color="primary" /> },
     { name: "Editors", path: "/editors", icon: <AccountBoxIcon color="primary" />},
-    { name: "Logins", path: "/logins", icon: <VerifiedUserIcon color="primary" /> },
+    { name: "Logins", path: "/category", icon: <PostAddSharp color="primary" /> },
   ];
 
   return (

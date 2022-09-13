@@ -33,7 +33,7 @@ const useStyles = makeStyles({
     },
   },
 });
-export default function NewsCard({ news, openInPopup }) {
+export default function NewsCard({ news, openInPopup , openInDeletePopup}) {
   const classes = useStyles(news);
   return (
     <div>
@@ -51,17 +51,19 @@ export default function NewsCard({ news, openInPopup }) {
           }
           action={
             <div>
-              <IconButton onClick={() => openInPopup(news.id,"update")}>
+              <IconButton onClick={() => openInPopup(news._id,"update")}>
+              {/* <p>{news._id}</p> */}
                 <EditOutlined />
               </IconButton>
               <IconButton>
-                <DeleteOutlined onClick={() => console.log("clicked")} />
+                <DeleteOutlined onClick={() => openInDeletePopup(news)} />
               </IconButton>
             </div>
           }
           title={news.title}
           subheader={news.category}
         />
+
         <CardContent>
           <Typography variant="body2" color="textSecondary">
             {news.desc}
