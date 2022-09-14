@@ -12,7 +12,7 @@ import { DeleteOutlined } from "@material-ui/icons";
 import React, { useState } from "react";
 import DeleteCategory from "../Popups/DeleteCategory";
 
-export default function CategoryTbl(props, ) {
+export default function CategoryTbl(props ) {
   const [categoryRecordForDelete, setcategoryRecordForDelete] = useState(null);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
 
