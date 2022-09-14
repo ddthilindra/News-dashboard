@@ -48,7 +48,9 @@ export default function Login() {
   const [passwordError, setpasswordError] = useState(false);
   const [passwordHError, setpasswordHError] = useState("");
 
-  const handelLogin = (e) => {
+  var isSuccess = false;
+
+  async function handelLogin(e) {
     e.preventDefault();
     setemailError(false);
     setpasswordError(false);
@@ -63,29 +65,52 @@ export default function Login() {
     }
 
     if (email && password) {
-      const newsData = {
+      const userData = {
         email,
         password,
       };
-    //   console.log(newsData);
-      axios
-        .post(`http://localhost:8000/editor/login`, newsData)
-        .then((res) => {
-          if (res.data.code == 200 && res.data.success == true) {
-            console.log(res.data.token.sub.firstName)
-            localStorage.setItem("username", res.data.token.sub.firstName);
-            localStorage.setItem("email", res.data.token.sub.email);
-            localStorage.setItem("token", res.data.token.token);
-            localStorage.setItem("isLoggedIn", true);
-            window.alert(res.data.message);
-            history.push("/news")
-          } else {
-            window.alert(res.data.message);
-          }
-        })
-        .catch((err) => console.log(err));
+
+      localStorage.clear();
+      if (!isSuccess) {
+        await axios
+          .post(`http://localhost:8000/admin/login`, userData)
+          .then((res) => {
+            if (res.data.code == 200 && res.data.success == true) {
+              isSuccess = true;
+              localStorage.setItem("username", res.data.token.sub.firstName);
+              localStorage.setItem("email", res.data.token.sub.email);
+              localStorage.setItem("token", res.data.token.token);
+              localStorage.setItem("isLoggedIn", true);
+              localStorage.setItem("role", "admin");
+              window.alert(res.data.message);
+              history.push("/news");
+            } else {
+              console.log(res.data.message);
+            }
+          })
+          .catch((err) => console.log(err));
+      }
+      if (!isSuccess) {
+        await axios
+          .post(`http://localhost:8000/editor/login`, userData)
+          .then((res) => {
+            if (res.data.code == 200 && res.data.success == true) {
+              isSuccess = true;
+              localStorage.setItem("username", res.data.token.sub.firstName);
+              localStorage.setItem("email", res.data.token.sub.email);
+              localStorage.setItem("token", res.data.token.token);
+              localStorage.setItem("isLoggedIn", true);
+              localStorage.setItem("role", "editor");
+              window.alert(res.data.message);
+              history.push("/news");
+            } else {
+              console.log(res.data.message);
+            }
+          })
+          .catch((err) => console.log(err));
+      }
     }
-  };
+  }
   return (
     <Grid container component="main" className={classes.root}>
       <CssBaseline />

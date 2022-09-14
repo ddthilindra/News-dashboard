@@ -57,9 +57,9 @@ export default function Layout({ children }) {
   const classes = useStyle();
   const history = useHistory();
   const location = useLocation();
+  const role = localStorage.getItem("role");
 
   const menuLinks = [
-    
     { name: "News", path: "/news", icon: <NewspaperIcon color="primary" /> },
     {
       name: "Editors",
@@ -72,13 +72,17 @@ export default function Layout({ children }) {
       icon: <PostAddSharp color="primary" />,
     },
   ];
+  const editormenuLinks = [
+    { name: "News", path: "/news", icon: <NewspaperIcon color="primary" /> },
+    {
+      name: "Category",
+      path: "/category",
+      icon: <PostAddSharp color="primary" />,
+    },
+  ];
 
   function handleLogout() {
-    console.log("first")
-    localStorage.removeItem("username");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("token");
-    localStorage.removeItem("email");
+    localStorage.clear();
     history.push("/");
   }
 
@@ -103,19 +107,39 @@ export default function Layout({ children }) {
           </Typography>
         </div>
         <List>
-          {menuLinks.map((item) => (
-            <ListItem
-              key={item.name}
-              button
-              onClick={() => history.push(item.path)}
-              className={location.pathname == item.path ? classes.active : null}
-            >
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText>{item.name}</ListItemText>
-            </ListItem>
-          ))}
+          {role == "admin"
+            ? menuLinks.map((item) => (
+                <ListItem
+                  key={item.name}
+                  button
+                  onClick={() => history.push(item.path)}
+                  className={
+                    location.pathname == item.path ? classes.active : null
+                  }
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText>{item.name}</ListItemText>
+                </ListItem>
+              ))
+            : null}
+          {role == "editor"
+            ? editormenuLinks.map((item) => (
+                <ListItem
+                  key={item.name}
+                  button
+                  onClick={() => history.push(item.path)}
+                  className={
+                    location.pathname == item.path ? classes.active : null
+                  }
+                >
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText>{item.name}</ListItemText>
+                </ListItem>
+              ))
+            : null}
+
           <ListItem button onClick={handleLogout}>
-            <ListItemIcon >
+            <ListItemIcon>
               <LogoutIcon color="primary" />
             </ListItemIcon>
             <ListItemText>Logout</ListItemText>

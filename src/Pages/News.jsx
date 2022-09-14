@@ -29,12 +29,13 @@ const useStyles = makeStyles({
 export default function News() {
   const [news, setnews] = useState([]);
   const [categories, setcategories] = useState([]);
-  const token = localStorage.getItem("token")
-  
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
   const history = useHistory();
   useEffect(() => {
     if (!localStorage.getItem("isLoggedIn")) {
-      history.push('/')
+      history.push("/");
     }
     const config = {
       headers: { Authorization: token },
@@ -63,11 +64,9 @@ export default function News() {
 
   const [dataTable, setdataTable] = useState([]);
   const handleEdit = async (id) => {
-    console.log("first");
     axios
       .put("http://localhost:3000/news" + id)
       .then((res) => {
-        console.log(res);
         setnews(res.json());
       })
       .catch((err) => console.log(err));
@@ -88,7 +87,6 @@ export default function News() {
   const [selectedValue, setSelectedValue] = useState("");
 
   const openInPopup = async (id, update) => {
-    console.log("first" + id);
     if (update) {
       setNewsRecordForEdit(id);
     }
@@ -106,80 +104,80 @@ export default function News() {
       : news;
     setdataTable(_vals);
   }
-  return (<>
-    <Layout />
-  
-    <Container style={{"margin-left": "18vw","padding-right": "3vw"}}>
-      <Box className={classes.add}>
-        <FormControl style={{ minWidth: 120 }}>
-          <InputLabel id="demo-simple-select-label">Category</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            label="Category"
-            onChange={handleSelectChange}
-          >
-            <MenuItem value={"All"}>All</MenuItem>
-            {categories.map((data) => (
-              <MenuItem
-                key={data.id}
-                value={data.category}
-                setSelectedValue={data.category}
-              >
-                {data.category}
-              </MenuItem>
+  return (
+    <>
+      <Layout />
+
+      <Container style={{ "margin-left": "18vw", "padding-right": "3vw" }}>
+        <Box className={classes.add}>
+          <FormControl style={{ minWidth: 120 }}>
+            <InputLabel id="demo-simple-select-label">Category</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              label="Category"
+              onChange={handleSelectChange}
+            >
+              <MenuItem value={"All"}>All</MenuItem>
+              {categories.map((data) => (
+                <MenuItem
+                  key={data.id}
+                  value={data.category}
+                  setSelectedValue={data.category}
+                >
+                  {data.category}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          {role == "editor" ? (
+            ""
+          ) : (
+            <Button color="primary" variant="contained" onClick={openInPopup}>
+              Add News
+            </Button>
+          )}
+        </Box>
+        <NewsPopup
+          openNewsPopup={openPopup}
+          setNewsOpenPopup={setOpenPopup}
+          newsRecordForEdit={newsRecordForEdit}
+        ></NewsPopup>
+        <DeleteNewsPopup
+          openDeletePopup={openDeletePopup}
+          setOpenDeletePopup={setOpenDeletePopup}
+          newsRecordForDelete={newsRecordForDelete}
+        ></DeleteNewsPopup>
+        <Grid container spacing={3}>
+          {category == "" &&
+            news.map((data) => (
+              <Grid item key={data.id} md={3} xs={12} sm={6} lg={4}>
+                <NewsCard
+                  news={data}
+                  openInPopup={openInPopup}
+                  openInDeletePopup={openInDeletePopup}
+                />
+              </Grid>
             ))}
-          </Select>
-        </FormControl>
-        {/* {
-          categories.map((data) => (
-            <p key={data.id}>{data.category}</p>
-          ))} */}
-        <Button color="primary" variant="contained" onClick={openInPopup}>
-          Add News
-        </Button>
-      </Box>
-      <NewsPopup
-        openNewsPopup={openPopup}
-        setNewsOpenPopup={setOpenPopup}
-        newsRecordForEdit={newsRecordForEdit}
-      ></NewsPopup>
-      <DeleteNewsPopup
-        openDeletePopup={openDeletePopup}
-        setOpenDeletePopup={setOpenDeletePopup}
-        newsRecordForDelete={newsRecordForDelete}
-      ></DeleteNewsPopup>
-      <Grid container spacing={3}>
-        {category == "" &&
-          news.map((data) => (
-            <Grid item key={data.id} md={3} xs={12} sm={6} lg={4}>
-              <NewsCard
-                news={data}
-                openInPopup={openInPopup}
-                openInDeletePopup={openInDeletePopup}
-              />
-            </Grid>
-          ))}
-        {category == "All" &&
-          news.map((data) => (
+          {category == "All" &&
+            news.map((data) => (
+              <Grid item key={data.id} md={3} xs={12} sm={6} lg={4}>
+                <NewsCard news={data} openInPopup={openInPopup} />
+              </Grid>
+            ))}
+          {dataTable.map((data) => (
             <Grid item key={data.id} md={3} xs={12} sm={6} lg={4}>
               <NewsCard news={data} openInPopup={openInPopup} />
             </Grid>
           ))}
-        {dataTable.map((data) => (
-          <Grid item key={data.id} md={3} xs={12} sm={6} lg={4}>
-            <NewsCard news={data} openInPopup={openInPopup} />
-          </Grid>
-        ))}
-        {/* {category == selectedValue &&
+          {/* {category == selectedValue &&
         news.map((data) => (
             <Grid item key={data.id} md={3} xs={12} sm={6} lg={4}>
               <NewsCard news={data} openInPopup={openInPopup} />
             </Grid>
           ))} */}
-      </Grid>
-    </Container>
+        </Grid>
+      </Container>
     </>
   );
 }
-

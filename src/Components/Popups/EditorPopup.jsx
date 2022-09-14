@@ -25,7 +25,7 @@ export default function EditorPopup(props) {
   const [password, setpassword] = useState("");
   const [cpassword, setcpassword] = useState("");
   const [lname, setlname] = useState("");
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   useEffect(() => {
     setErrorFname(false);
     setErrorEmail(false);
@@ -89,49 +89,40 @@ export default function EditorPopup(props) {
     setlnameError("");
 
     if (fname == "") {
-      console.log("empty admin_name");
       setErrorFname(true);
       setfNameError("This field is required");
     }
     if (!lname.trim()) {
-      console.log("empty email_address");
       seterrorLname(true);
       setlnameError("This field is required");
     }
 
     if (!email_address.trim()) {
-      console.log("empty email_address");
       setErrorEmail(true);
       setemailAddressError("This field is required");
     }
 
     if (mobile_number < 10) {
-      console.log("empty mobile_number");
       setErrorPhone(true);
       setPhoneError("This field is required");
     }
     //password validation
     const cond3 = "/^(?=.*[0-9]).{6,20}$/";
     if (!password) {
-      console.log("empty password");
       setErrorPass(true);
       setPassError("This field is required");
     } else if (password.length < 6) {
-      console.log("empty password");
       setErrorPass(true);
       setPassError("Password must be longer than 6 characters");
     } else if (password.length >= 20) {
-      console.log("empty password");
       setErrorPass(true);
       setPassError("Password must shorter than 20 characters");
     }
 
     if (!cpassword.trim()) {
-      console.log("empty password");
       setErrorCPass(true);
       setCPassError("This field is required");
     } else if (cpassword != password) {
-      console.log("passward missmatch");
       setErrorCPass(true);
       setCPassError("Password does not match confirmation password");
     }
@@ -148,21 +139,17 @@ export default function EditorPopup(props) {
         mobile: mobile_number,
         password,
       };
-      console.log(editorData)
       const config = {
         headers: { Authorization: token },
       };
       axios
-        .post(`http://localhost:8000/editor/addEditor`, editorData,config)
+        .post(`http://localhost:8000/editor/addEditor`, editorData, config)
         .then((response) => {
-          console.log(response.data);
-
           if (response.status == 200) {
             window.alert(`${response.data.message}`);
-            // setUpdateOpenPopup(false);
+
             window.location.reload(false);
-            console.log(`${response.status}`);
-            console.log(response.data.message);
+
             setfname("");
             setemail_address("");
             setmobile_number("");
@@ -170,8 +157,6 @@ export default function EditorPopup(props) {
             setcpassword("");
           } else {
             window.alert("Somthing went wrong");
-            console.log(`${response.status}`);
-            console.log(response.data.message);
           }
         })
         .catch((err) => {

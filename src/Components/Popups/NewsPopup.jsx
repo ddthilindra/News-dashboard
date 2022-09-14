@@ -14,6 +14,8 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
+import imga from "../../assets/Asus.jpg";
+
 const useStyles = makeStyles({
   popup: {
     width: "100%",
@@ -25,8 +27,8 @@ export default function NewsPopup(props) {
   const classes = useStyles();
   const [categories, setcategories] = useState([]);
   const [btnText, setbtnText] = useState("Submit");
-  const token = localStorage.getItem("token")
-  
+  const token = localStorage.getItem("token");
+
   const config = {
     headers: { Authorization: token },
   };
@@ -58,17 +60,14 @@ export default function NewsPopup(props) {
   const [descHError, setdescHError] = useState("");
   const [categoryHError, setcategoryHError] = useState("");
 
-  const [Uimage, setUImage] = useState({});
+  const [Uimage, setUimage] = useState();
 
   const handleFile = (e) => {
-     console.log(e.target.files, "$$$$");
-     console.log(e.target.files[0], "$$$$");
-    //  let formdata = new FormData();
-    // formdata.append("image", e.target.files[0]);
-   
+    const file = e.target.files[0];
+    console.log(file);
+    setUimage(file);
   };
   const handleSubmit = (e) => {
-    
     e.preventDefault();
     settitleError(false);
     setdescriptionError(false);
@@ -86,15 +85,17 @@ export default function NewsPopup(props) {
     }
 
     if (title && description && category) {
+      console.log(Uimage);
+      console.log(category);
 
-      const newsData = {
-        title,
-        description,
-        category,
-      };
-      console.log(newsData);
+      let formdata = new FormData();
+      formdata.append("image", Uimage);
+      formdata.append("title", title);
+      formdata.append("description", description);
+      formdata.append("category", category);
+      console.log(formdata);
       axios
-        .post(`http://localhost:8000/news/addNews`, newsData,config)
+        .post(`http://localhost:8000/news/addNews`, formdata, config)
         .then((res) => {
           if (res.data.code == 200 && res.data.success == true) {
             window.alert(res.data.message);
@@ -106,7 +107,6 @@ export default function NewsPopup(props) {
     }
   };
   const handleUpdate = (e) => {
-    
     e.preventDefault();
     settitleError(false);
     setdescriptionError(false);
@@ -124,15 +124,19 @@ export default function NewsPopup(props) {
     }
 
     if (title && description && category) {
-
-      const newsData = {
-        title,
-        description,
-        category,
-      };
-      console.log(newsData);
+      console.log(Uimage);
+      let formdata2 = new FormData();
+      formdata2.append("image", Uimage);
+      formdata2.append("title", title);
+      formdata2.append("description", description);
+      formdata2.append("category", category);
+      console.log(formdata2);
       axios
-        .put(`http://localhost:8000/news/updateNews/`+updateId, newsData,config)
+        .put(
+          `http://localhost:8000/news/updateNews/` + updateId,
+          formdata2,
+          config
+        )
         .then((res) => {
           if (res.data.code == 200 && res.data.success == true) {
             window.alert(res.data.message);
@@ -152,8 +156,7 @@ export default function NewsPopup(props) {
     setdescriptionError(false);
     const initChat = async () => {
       var id = await newsRecordForEdit;
-      setupdateId(id)
-      // console.log(id);
+      setupdateId(id);
       if (id) {
         await axios
           .get(`http://localhost:8000/news/getNewsById/` + id, config)
@@ -198,7 +201,7 @@ export default function NewsPopup(props) {
   return (
     <div className={classes.popup}>
       <Dialog open={openNewsPopup} onClose={handleClose}>
-        <DialogTitle>Add New Employee</DialogTitle>
+        <DialogTitle>Add New News</DialogTitle>
 
         <div
           className="dlgcontainer"
@@ -271,7 +274,11 @@ export default function NewsPopup(props) {
           <Button onClick={handleClose} variant="outlined">
             Cancel
           </Button>
-          <Button onClick={btnText == "Submit" ? handleSubmit : handleUpdate} variant="contained" color="success">
+          <Button
+            onClick={btnText == "Submit" ? handleSubmit : handleUpdate}
+            variant="contained"
+            color="success"
+          >
             {btnText}
           </Button>
         </DialogActions>

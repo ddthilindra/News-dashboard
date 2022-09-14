@@ -33,15 +33,13 @@ const useStyles = makeStyles({
     },
   },
 });
-export default function NewsCard({ news, openInPopup , openInDeletePopup}) {
+export default function NewsCard({ news, openInPopup, openInDeletePopup }) {
   const classes = useStyles(news);
+  const role = localStorage.getItem("role");
   return (
     <div>
       <Card elevation={1} className={classes.test}>
-        <CardMedia
-          className={classes.CardMedia}
-          image={news.imageUrl}
-        ></CardMedia>
+        <CardMedia className={classes.CardMedia} image={news.image}></CardMedia>
         <CardHeader
           avatar={
             <Avatar className={classes.avatar}>
@@ -51,13 +49,17 @@ export default function NewsCard({ news, openInPopup , openInDeletePopup}) {
           }
           action={
             <div>
-              <IconButton onClick={() => openInPopup(news._id,"update")}>
-              {/* <p>{news._id}</p> */}
+              <IconButton onClick={() => openInPopup(news._id, "update")}>
+                {/* <p>{news._id}</p> */}
                 <EditOutlined />
               </IconButton>
-              <IconButton>
-                <DeleteOutlined onClick={() => openInDeletePopup(news)} />
-              </IconButton>
+              {role == "editor" ? (
+                ""
+              ) : (
+                <IconButton>
+                  <DeleteOutlined onClick={() => openInDeletePopup(news)} />
+                </IconButton>
+              )}
             </div>
           }
           title={news.title}
@@ -66,7 +68,7 @@ export default function NewsCard({ news, openInPopup , openInDeletePopup}) {
 
         <CardContent>
           <Typography variant="body2" color="textSecondary">
-            {news.desc}
+            {news.description.substring(0,100)} ...
           </Typography>
         </CardContent>
       </Card>
